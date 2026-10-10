@@ -1,440 +1,181 @@
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RNViev Center</title>
+<title>RNViev</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0e14;--panel:#131820;--line:#1e2632;--fg:#e6edf3;--dim:#7d8590;--ac:#00e676;--ac2:#00b0ff;--warn:#ffab00;--err:#ff5252}
-body{background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;padding:20px;max-width:1400px;margin:0 auto;min-height:100vh}
-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px}
-h1{font-size:22px;font-weight:600;letter-spacing:-.02em}
-h1 span{color:var(--ac)}
-.sub{color:var(--dim);font-size:12px;margin-top:2px}
-.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-button{padding:9px 16px;background:var(--ac);color:#000;border:0;border-radius:8px;font:600 13px inherit;cursor:pointer;transition:opacity .15s}
-button:hover{opacity:.85}
-button.sec{background:transparent;color:var(--fg);border:1px solid var(--line)}
-button.sec:hover{background:var(--line);opacity:1}
-button.danger{background:transparent;color:var(--err);border:1px solid var(--err)}
-button.danger:hover{background:rgba(255,82,82,.1);opacity:1}
-button:disabled{opacity:.4;cursor:not-allowed}
-input{padding:9px 12px;background:#0a0e14;border:1px solid var(--line);border-radius:8px;color:var(--fg);font:13px inherit;outline:none;transition:border-color .15s}
-input:focus{border-color:var(--ac)}
-.layout{display:grid;grid-template-columns:340px 1fr;gap:16px}
-@media(max-width:900px){.layout{grid-template-columns:1fr}}
-.sidebar{display:flex;flex-direction:column;gap:12px}
-.main{display:flex;flex-direction:column;gap:12px;min-width:0}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
-.card h2{font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.board{padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:border-color .15s;margin-bottom:8px}
-.board:hover{border-color:var(--ac)}
-.board.active{border-color:var(--ac);background:linear-gradient(180deg,var(--panel),rgba(0,230,118,.04))}
-.board-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.board-id{font-weight:600;font-size:14px}
-.board-ip{font:11px ui-monospace,monospace;color:var(--dim)}
-.board-meta{display:flex;gap:14px;font-size:11px;color:var(--dim);margin-top:6px}
-.board-meta b{color:var(--fg);font-weight:500}
-.status{width:7px;height:7px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac)}
-.status.off{background:#3a4048;box-shadow:none}
-.status.warn{background:var(--warn);box-shadow:0 0 8px var(--warn)}
-#radarWrap{position:relative;background:#000;border-radius:12px;height:520px;overflow:hidden}
-#radar{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
-#radar:active{cursor:grabbing}
-.empty{text-align:center;padding:60px 20px;color:var(--dim);font-size:13px}
-.empty b{color:var(--fg);display:block;margin-bottom:6px;font-size:15px}
-.tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;display:inline-block;min-width:56px;text-align:center}
-.tag.human{background:rgba(0,230,118,.15);color:var(--ac)}
-.tag.router{background:rgba(255,255,255,.12);color:#fff}
-.tag.ap{background:rgba(255,171,0,.15);color:var(--warn)}
-.tag.unk{background:rgba(125,133,144,.15);color:var(--dim)}
-.row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;align-items:center}
+:root{--bg:#0a0e14;--p:#131820;--l:#1e2632;--f:#e6edf3;--d:#7d8590;--a:#00e676;--w:#ffab00}
+body{background:var(--bg);color:var(--f);font:14px/1.5 -apple-system,sans-serif;padding:16px;max-width:1200px;margin:0 auto}
+h1{font-size:20px;font-weight:600}h1 span{color:var(--a)}
+.sub{color:var(--d);font-size:12px;margin-bottom:16px}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:14px}
+@media(max-width:820px){.layout{grid-template-columns:1fr}}
+.card{background:var(--p);border:1px solid var(--l);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h2{font-size:11px;font-weight:600;color:var(--d);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.board{padding:10px;background:var(--p);border:1px solid var(--l);border-radius:8px;cursor:pointer;margin-bottom:6px}
+.board:hover{border-color:var(--a)}
+.board.active{border-color:var(--a);background:rgba(0,230,118,.06)}
+.bid{font-weight:600;font-size:13px}.bip{font:11px ui-monospace,monospace;color:var(--d)}
+.bm{display:flex;gap:10px;font-size:10px;color:var(--d);margin-top:3px}
+.bm b{color:var(--f);font-weight:500}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--a);margin-right:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.s{background:#0a0e14;border:1px solid var(--l);border-radius:8px;padding:8px;text-align:center}
+.s b{display:block;font-size:18px;font-weight:600}.s span{font-size:9px;color:var(--d);text-transform:uppercase}
+.s.human b{color:var(--a)}.s.router b{color:#fff}.s.ap b{color:var(--w)}.s.total b{color:#00b0ff}
+#rw{position:relative;background:#000;border:1px solid var(--l);border-radius:12px;height:420px;overflow:hidden}
+#radar{width:100%;height:100%;cursor:grab;touch-action:none}
+.row{display:grid;grid-template-columns:auto 1fr auto;gap:8px;padding:6px 0;border-bottom:1px solid var(--l);font-size:12px;align-items:center}
 .row:last-child{border-bottom:0}
-.row .mac{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-.row .mac .ssid{color:var(--dim);margin-left:6px}
-.row .rssi{color:var(--dim);font-variant-numeric:tabular-nums}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.stats .s{background:#0a0e14;border:1px solid var(--line);border-radius:8px;padding:10px;text-align:center}
-.stats .s b{display:block;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
-.stats .s span{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
-.stats .s.human b{color:var(--ac)}
-.stats .s.router b{color:#fff}
-.stats .s.ap b{color:var(--warn)}
-.stats .s.total b{color:var(--ac2)}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.discover{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--dim)}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--ac);animation:p 2s infinite}
-@keyframes p{0%,100%{opacity:.3}50%{opacity:1}}
-.progress{background:#0a0e14;border-radius:4px;height:5px;overflow:hidden;margin:8px 0}
-.progress .bar{height:100%;background:var(--ac);width:0;transition:width .2s}
-.hidden{display:none!important}
-details summary{cursor:pointer;font-size:11px;color:var(--dim);padding:6px 0;text-transform:uppercase;letter-spacing:.06em}
-details summary:hover{color:var(--fg)}
-details .body{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.tag{padding:2px 7px;border-radius:4px;font-size:9px;font-weight:600;text-transform:uppercase;min-width:50px;text-align:center}
+.tag.human{background:rgba(0,230,118,.15);color:var(--a)}
+.tag.router{background:rgba(255,255,255,.12);color:#fff}
+.tag.ap{background:rgba(255,171,0,.15);color:var(--w)}
+.tag.unk{background:rgba(125,133,144,.15);color:var(--d)}
+.mac{font:11px ui-monospace,monospace}.mac .ssid{color:var(--d);margin-left:5px}
+.rssi{color:var(--d);font-size:11px}
+.empty{text-align:center;padding:40px 20px;color:var(--d);font-size:13px}
+.empty b{color:var(--f);display:block;margin-bottom:6px;font-size:15px}
 </style></head><body>
 
-<header>
-  <div>
-    <h1>RNViev <span>Center</span></h1>
-    <div class="sub" id="subInfo">Автопоиск плат в сети</div>
-  </div>
-  <div class="controls">
-    <input type="text" id="subnet" placeholder="192.168.1" style="width:140px">
-    <button class="sec" onclick="startDiscovery()">Найти</button>
-    <button class="sec" onclick="refreshAll()">Обновить</button>
-  </div>
-</header>
+<h1>RNViev <span>Center</span></h1>
+<div class="sub" id="sub">Загрузка...</div>
 
 <div class="layout">
-  <div class="sidebar">
-    <div class="discover" id="discoverBar">
-      <div class="dot"></div>
-      <div id="discoverText">Готов к поиску</div>
-    </div>
-
+  <div>
     <div class="card">
-      <h2>Платы <span id="boardCount" style="color:var(--dim);font-weight:400"></span></h2>
-      <div id="boards"></div>
+      <h2>Платы <span id="bc" style="color:var(--d);font-weight:400"></span></h2>
+      <div id="boards"><div class="empty"><b>Плат нет</b>Ждём первую плату...</div></div>
     </div>
   </div>
-
-  <div class="main">
-    <div class="card" id="detailCard">
-      <div class="toolbar" style="margin-bottom:14px">
-        <div>
-          <div style="font-size:15px;font-weight:600" id="selName">— плата не выбрана —</div>
-          <div class="sub" id="selMeta" style="margin-top:2px"></div>
-        </div>
-        <button class="danger" id="removeBtn" onclick="removeSelected()" style="display:none">Удалить</button>
+  <div>
+    <div class="card">
+      <div style="margin-bottom:10px">
+        <div style="font-size:15px;font-weight:600" id="selName">— выберите плату —</div>
+        <div class="sub" id="selMeta"></div>
       </div>
-
-      <div class="stats" id="statsBar" style="margin-bottom:16px">
-        <div class="s total"><b id="sTotal">0</b><span>Всего</span></div>
-        <div class="s human"><b id="sHuman">0</b><span>Люди</span></div>
-        <div class="s router"><b id="sRouter">0</b><span>Роутеры</span></div>
-        <div class="s ap"><b id="sAp">0</b><span>Точки</span></div>
+      <div class="stats">
+        <div class="s total"><b id="sT">0</b><span>Всего</span></div>
+        <div class="s human"><b id="sH">0</b><span>Люди</span></div>
+        <div class="s router"><b id="sR">0</b><span>Роутеры</span></div>
+        <div class="s ap"><b id="sA">0</b><span>Точки</span></div>
       </div>
-
-      <div id="radarWrap"><canvas id="radar"></canvas></div>
-
-      <div style="margin-top:16px">
-        <h2 style="margin-bottom:8px">Устройства</h2>
-        <div id="deviceList" style="max-height:280px;overflow-y:auto">
-          <div class="empty"><b>Нет данных</b>Выберите плату слева</div>
-        </div>
+      <div id="rw"><canvas id="radar"></canvas></div>
+      <div style="margin-top:14px">
+        <h2 style="font-size:11px;color:var(--d);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Устройства</h2>
+        <div id="devs"><div class="empty" style="padding:20px">Нет данных</div></div>
       </div>
-
-      <details style="margin-top:16px">
-        <summary>Обновление прошивки (OTA)</summary>
-        <div class="body">
-          <input type="text" id="otaVer" placeholder="Версия (напр. 1.9)">
-          <input type="file" id="otaFile" accept=".bin">
-          <div class="progress hidden" id="otaProg"><div class="bar" id="otaBar"></div></div>
-          <button onclick="doOTA()">Отправить обновление</button>
-          <div class="sub" id="otaMsg"></div>
-        </div>
-      </details>
     </div>
   </div>
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
-const LS_BOARDS = 'rnview_boards_v2';
-const LS_SUBNET = 'rnview_subnet';
-
-let boards = JSON.parse(localStorage.getItem(LS_BOARDS) || '[]');   // [{ip, id, name, fw, net, online, devs, lastSeen}]
-let selectedIp = null;
-
 // ============================================================
-// DISCOVERY
+const REPO_OWNER = 'ТВОЙ_НИК';       // ← впиши
+const REPO_NAME  = 'rnview';          // ← впиши
+const BRANCH     = 'main';
 // ============================================================
-async function probeIp(ip, timeout=800){
-  return new Promise(resolve=>{
-    const t = setTimeout(()=>resolve(null), timeout);
-    fetch('http://'+ip+'/info', {cache:'no-store'})
-      .then(r=>r.ok?r.json():null)
-      .then(d=>{ clearTimeout(t); resolve(d ? {ip, info:d} : null); })
-      .catch(()=>{ clearTimeout(t); resolve(null); });
-  });
-}
 
-async function discoverSubnet(base){
-  const total = 254;
-  const batch = 40;
-  const found = [];
-  for (let i = 1; i <= total; i += batch){
-    const promises = [];
-    for (let j = i; j < i + batch && j <= total; j++){
-      promises.push(probeIp(base + '.' + j, 700));
-    }
-    const results = await Promise.all(promises);
-    for (const r of results) if (r) found.push(r);
-    $('discoverText').innerText = 'Найдено: ' + (boards.length + found.length) + ' · проверено ' + Math.min(i+batch-1, total) + '/254';
-  }
-  return found;
-}
+const API = 'https://api.github.com/repos/'+REPO_OWNER+'/'+REPO_NAME+'/contents';
+let boards = [], selectedId = null;
 
-async function startDiscovery(){
-  let base = $('subnet').value.trim();
-  if (!base){
-    // если пусто — попробуем угадать из первого добавленного
-    if (boards.length) base = boards[0].ip.split('.').slice(0,3).join('.');
-    else base = '192.168.1';
-    $('subnet').value = base;
-  }
-  localStorage.setItem(LS_SUBNET, base);
-  $('discoverText').innerText = 'Сканирование ' + base + '.1-254...';
-
-  const found = await discoverSubnet(base);
-  for (const f of found){
-    const existing = boards.find(b=>b.ip === f.ip);
-    if (!existing){
-      boards.push({
-        ip: f.ip, id: f.info.id, name: f.info.name, fw: f.info.fw, net: f.info.net,
-        online: true, devs: [], lastSeen: Date.now()
-      });
-    } else {
-      existing.id = f.info.id; existing.name = f.info.name;
-      existing.fw = f.info.fw; existing.net = f.info.net;
-      existing.online = true; existing.lastSeen = Date.now();
-    }
-  }
-  saveBoards();
-  renderBoards();
-  $('discoverText').innerText = 'Готово · найдено ' + boards.length + ' плат';
-  refreshAll();
-}
-
-// ============================================================
-// POLLING
-// ============================================================
-function saveBoards(){
-  localStorage.setItem(LS_BOARDS, JSON.stringify(boards.map(b=>({
-    ip:b.ip, id:b.id, name:b.name, fw:b.fw, net:b.net
-  }))));
-}
-
-async function pingBoard(b){
+async function listBoards(){
   try {
-    const r = await fetch('http://'+b.ip+'/scan', {cache:'no-store'});
-    if (!r.ok) throw 0;
-    const d = await r.json();
-    b.online = true; b.lastSeen = Date.now();
-    b.fw = d.fw; b.net = d.net;
-    b.devs = d.devs || [];
-    return true;
-  } catch {
-    b.online = false;
-    return false;
+    const r = await fetch(API+'/data?ref='+BRANCH, {headers:{'Accept':'application/vnd.github+json'}});
+    if (!r.ok) throw new Error(r.status);
+    const files = await r.json();
+    const arr = [];
+    for (const f of files){
+      if (!f.name.endsWith('.json')) continue;
+      const d = await fetchOne(f.path);
+      if (d) arr.push(d);
+    }
+    boards = arr;
+    document.getElementById('sub').innerText = 'Плат онлайн: '+boards.length+' · '+new Date().toLocaleTimeString();
+    renderBoards();
+    if (selectedId){
+      const b = boards.find(x=>x.id===selectedId);
+      if (b) renderDetail(b);
+    }
+  } catch(e){
+    document.getElementById('sub').innerText = 'Ошибка: '+e.message+' (проверь REPO_OWNER/REPO_NAME)';
   }
 }
 
-async function refreshAll(){
-  if (!boards.length) return;
-  await Promise.all(boards.map(pingBoard));
-  renderBoards();
-  if (selectedIp){
-    const b = boards.find(x=>x.ip===selectedIp);
-    if (b) renderDetail(b);
-  }
+async function fetchOne(path){
+  try {
+    const r = await fetch(API+'/'+path+'?ref='+BRANCH, {headers:{'Accept':'application/vnd.github+json'}});
+    if (!r.ok) return null;
+    const j = await r.json();
+    const txt = atob(j.content.replace(/\n/g,''));
+    return JSON.parse(txt);
+  } catch { return null; }
 }
 
-setInterval(refreshAll, 3000);
-setInterval(()=>{
-  // каждые 30 сек — автообновление списка через подсеть
-  const base = localStorage.getItem(LS_SUBNET);
-  if (base && !$('discoverBar').dataset.busy){
-    refreshAll();
-  }
-}, 15000);
-
-// ============================================================
-// RENDER
-// ============================================================
 function renderBoards(){
-  $('boardCount').innerText = boards.length ? '(' + boards.length + ')' : '';
-  const el = $('boards');
+  document.getElementById('bc').innerText = boards.length ? '('+boards.length+')' : '';
+  const el = document.getElementById('boards');
   if (!boards.length){
-    el.innerHTML = '<div class="empty" style="padding:30px 10px"><b>Плат нет</b>Нажмите «Найти» для поиска</div>';
+    el.innerHTML = '<div class="empty"><b>Плат нет</b>Ждём первую плату...</div>';
     return;
   }
   el.innerHTML = boards.map(b=>{
-    const cls = b.online ? '' : 'off';
-    const act = selectedIp === b.ip ? 'active' : '';
-    return '<div class="board '+act+'" onclick="selectBoard(\''+b.ip+'\')">'
-      +  '<div class="board-head">'
-      +    '<div class="board-id"><span class="status '+cls+'"></span> RNViev '+(b.id||'')+'</div>'
-      +    '<div class="board-ip">'+b.ip+'</div>'
-      +  '</div>'
-      +  '<div class="board-meta">'
-      +    '<span>FW <b>'+(b.fw||'?')+'</b></span>'
-      +    '<span>Устр. <b>'+(b.devs?b.devs.length:0)+'</b></span>'
-      +    '<span>Люди <b>'+(b.devs?b.devs.filter(x=>x.t===1).length:0)+'</b></span>'
-      +  '</div>'
-      + '</div>';
+    const act = selectedId === b.id ? 'active' : '';
+    const hum = (b.devs||[]).filter(x=>x.t===1).length;
+    return '<div class="board '+act+'" onclick="sel(\''+b.id+'\')">'
+      +'<div class="bid"><span class="dot"></span>RNViev '+(b.id||'')+'</div>'
+      +'<div class="bip">'+(b.ip||'')+'</div>'
+      +'<div class="bm"><span>FW <b>'+(b.fw||'?')+'</b></span>'
+      +'<span>Устр. <b>'+((b.devs||[]).length)+'</b></span>'
+      +'<span>Люди <b>'+hum+'</b></span></div></div>';
   }).join('');
 }
 
-function selectBoard(ip){
-  selectedIp = ip;
-  const b = boards.find(x=>x.ip===ip);
-  renderBoards();
-  if (b) renderDetail(b);
-}
+function sel(id){ selectedId = id; renderBoards(); const b = boards.find(x=>x.id===id); if (b) renderDetail(b); }
 
 function renderDetail(b){
-  $('selName').innerText = 'RNViev ' + (b.id || b.ip);
-  $('selMeta').innerText = b.ip + ' · ' + (b.net||'?') + ' · FW ' + (b.fw||'?') + (b.online?'':' · ОФФЛАЙН');
-  $('removeBtn').style.display = 'inline-block';
-
-  const devs = b.devs || [];
-  $('sTotal').innerText  = devs.length;
-  $('sHuman').innerText  = devs.filter(x=>x.t===1).length;
-  $('sRouter').innerText = devs.filter(x=>x.t===2).length;
-  $('sAp').innerText     = devs.filter(x=>x.t===3).length;
-
-  devices3D = devs.map(x=>({t:x.t, r:x.r, dist:rssiToDist(x.r), ang:macAngle(x.m)}));
-
-  let h = '';
-  for (const x of devs.slice().sort((a,c)=>c.r-a.r)){
+  document.getElementById('selName').innerText = 'RNViev '+b.id;
+  document.getElementById('selMeta').innerText = (b.ip||'')+' · '+(b.net||'')+' · FW '+(b.fw||'');
+  const d = b.devs || [];
+  document.getElementById('sT').innerText = d.length;
+  document.getElementById('sH').innerText = d.filter(x=>x.t===1).length;
+  document.getElementById('sR').innerText = d.filter(x=>x.t===2).length;
+  document.getElementById('sA').innerText = d.filter(x=>x.t===3).length;
+  devices3D = d.map(x=>({t:x.t,r:x.r,dist:rd(x.r),ang:ma(x.m)}));
+  let h='';
+  for (const x of d.slice().sort((a,c)=>c.r-a.r)){
     const tag = x.t===1?'human':x.t===2?'router':x.t===3?'ap':'unk';
-    const name = x.t===1?'Человек':x.t===2?'Роутер':x.t===3?'Точка':'?';
-    const ssid = x.s ? '<span class="ssid">['+x.s+']</span>' : '';
-    h += '<div class="row"><span class="tag '+tag+'">'+name+'</span>'
-      +  '<div class="mac">'+x.m+ssid+'</div>'
-      +  '<div class="rssi">'+x.r+' dBm</div></div>';
+    const nm  = x.t===1?'Человек':x.t===2?'Роутер':x.t===3?'Точка':'?';
+    const ss  = x.s ? '<span class="ssid">['+x.s+']</span>' : '';
+    h+='<div class="row"><span class="tag '+tag+'">'+nm+'</span><div class="mac">'+x.m+ss+'</div><div class="rssi">'+x.r+' dBm</div></div>';
   }
-  $('deviceList').innerHTML = h || '<div class="empty" style="padding:20px">Устройств не найдено</div>';
+  document.getElementById('devs').innerHTML = h || '<div class="empty" style="padding:20px">Устройств нет</div>';
 }
 
-function removeSelected(){
-  if (!selectedIp) return;
-  if (!confirm('Удалить плату ' + selectedIp + '?')) return;
-  boards = boards.filter(b=>b.ip !== selectedIp);
-  saveBoards();
-  selectedIp = null;
-  $('selName').innerText = '— плата не выбрана —';
-  $('selMeta').innerText = '';
-  $('removeBtn').style.display = 'none';
-  devices3D = [];
-  $('deviceList').innerHTML = '<div class="empty"><b>Нет данных</b>Выберите плату слева</div>';
-  renderBoards();
-}
+function rd(r){ if(r>=-40)return 30; if(r<=-95)return 500; return Math.max(30,Math.min(500,Math.pow(10,(-40-r)/25)*100)); }
+function ma(m){ let h=5381; for(let i=0;i<m.length;i++) h=((h<<5)+h)+m.charCodeAt(i); return (h%360)*Math.PI/180; }
 
-// ============================================================
-// 3D RADAR
-// ============================================================
-const canvas = $('radar'), ctx = canvas.getContext('2d');
-let W, H;
-function resize(){
-  const r = canvas.parentNode.getBoundingClientRect();
-  W = canvas.width = r.width|0;
-  H = canvas.height = r.height|0;
-}
-addEventListener('resize', resize);
-
-const cam = {yaw:.6, pitch:.55, dist:700, targetY:50, fov:550};
-let drag=false, lx=0, ly=0, pinch=0;
-canvas.addEventListener('mousedown', e=>{drag=true; lx=e.clientX; ly=e.clientY;});
-canvas.addEventListener('mousemove', e=>{ if(!drag)return; cam.yaw+=(e.clientX-lx)*.008; cam.pitch=Math.max(.05,Math.min(1.35,cam.pitch+(e.clientY-ly)*.006)); lx=e.clientX; ly=e.clientY; });
-addEventListener('mouseup', ()=>drag=false);
-canvas.addEventListener('wheel', e=>{ cam.dist=Math.max(180,Math.min(2000,cam.dist*(1+e.deltaY*.001))); e.preventDefault(); }, {passive:false});
-canvas.addEventListener('touchstart', e=>{ if(e.touches.length===1){drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY;} else if(e.touches.length===2){drag=false;pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}}, {passive:true});
-canvas.addEventListener('touchmove', e=>{ if(e.touches.length===1&&drag){cam.yaw+=(e.touches[0].clientX-lx)*.008;cam.pitch=Math.max(.05,Math.min(1.35,cam.pitch+(e.touches[0].clientY-ly)*.006));lx=e.touches[0].clientX;ly=e.touches[0].clientY;} else if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);cam.dist=Math.max(180,Math.min(2000,cam.dist*pinch/d));pinch=d;} e.preventDefault(); }, {passive:false});
-canvas.addEventListener('touchend', ()=>drag=false);
-
-function project(x,y,z){
-  let dx=x, dy=y-cam.targetY, dz=z;
-  const cy=Math.cos(-cam.yaw), sy=Math.sin(-cam.yaw);
-  let rx=dx*cy-dz*sy, rz=dx*sy+dz*cy;
-  const cp=Math.cos(-cam.pitch), sp=Math.sin(-cam.pitch);
-  let ry=dy*cp-rz*sp, rz2=dy*sp+rz*cp+cam.dist;
-  if(rz2<=1) return null;
-  const f=cam.fov/rz2;
-  return {x:W/2+rx*f, y:H/2-ry*f, s:f};
-}
-function drawFloor(){
-  const step=50, max=300;
-  for(let x=-max;x<=max;x+=step){
-    const mj=x%100===0;
-    ctx.strokeStyle=mj?'rgba(0,230,118,.3)':'rgba(0,230,118,.08)';
-    ctx.lineWidth=mj?1.2:.7;
-    const a=project(x,0,-max), b=project(x,0,max);
-    if(a&&b){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
-  }
-  for(let z=-max;z<=max;z+=step){
-    const mj=z%100===0;
-    ctx.strokeStyle=mj?'rgba(0,230,118,.3)':'rgba(0,230,118,.08)';
-    ctx.lineWidth=mj?1.2:.7;
-    const a=project(-max,0,z), b=project(max,0,z);
-    if(a&&b){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
-  }
-  const o=project(0,0,0);
-  if(o){ctx.strokeStyle='rgba(0,230,118,.6)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(o.x,o.y,5,0,Math.PI*2);ctx.stroke();}
-  ctx.fillStyle='rgba(0,230,118,.4)'; ctx.font='10px ui-monospace,monospace';
-  for(let d=100;d<=500;d+=100){const p=project(d,0,0); if(p) ctx.fillText(d+'cm',p.x+3,p.y-3);}
-}
-const COLORS={1:{c:[0,230,118],h:140,r:9},2:{c:[230,237,243],h:110,r:7},3:{c:[255,171,0],h:90,r:8},0:{c:[125,133,144],h:100,r:5}};
+const cv=document.getElementById('radar'),ctx=cv.getContext('2d');let W,H;
+function rz(){const r=cv.parentNode.getBoundingClientRect();W=cv.width=r.width|0;H=cv.height=r.height|0;}
+addEventListener('resize',rz);
+const cam={yaw:.6,pitch:.55,dist:700,targetY:50,fov:550};
+let dr=false,lx=0,ly=0;
+cv.addEventListener('mousedown',e=>{dr=true;lx=e.clientX;ly=e.clientY;});
+cv.addEventListener('mousemove',e=>{if(!dr)return;cam.yaw+=(e.clientX-lx)*.008;cam.pitch=Math.max(.05,Math.min(1.35,cam.pitch+(e.clientY-ly)*.006));lx=e.clientX;ly=e.clientY;});
+addEventListener('mouseup',()=>dr=false);
+cv.addEventListener('wheel',e=>{cam.dist=Math.max(180,Math.min(2000,cam.dist*(1+e.deltaY*.001)));e.preventDefault();},{passive:false});
+cv.addEventListener('touchstart',e=>{if(e.touches.length===1){dr=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY;}},{passive:true});
+cv.addEventListener('touchmove',e=>{if(e.touches.length===1&&dr){cam.yaw+=(e.touches[0].clientX-lx)*.008;cam.pitch=Math.max(.05,Math.min(1.35,cam.pitch+(e.touches[0].clientY-ly)*.006));lx=e.touches[0].clientX;ly=e.touches[0].clientY;}e.preventDefault();},{passive:false});
+cv.addEventListener('touchend',()=>dr=false);
+function pj(x,y,z){let dx=x,dy=y-cam.targetY,dz=z;const cy=Math.cos(-cam.yaw),sy=Math.sin(-cam.yaw);let rx=dx*cy-dz*sy,rz=dx*sy+dz*cy;const cp=Math.cos(-cam.pitch),sp=Math.sin(-cam.pitch);let ry=dy*cp-rz*sp,rz2=dy*sp+rz*cp+cam.dist;if(rz2<=1)return null;const f=cam.fov/rz2;return{x:W/2+rx*f,y:H/2-ry*f,s:f};}
+function floor(){const st=50,mx=300;for(let x=-mx;x<=mx;x+=st){const mj=x%100===0;ctx.strokeStyle=mj?'rgba(0,230,118,.3)':'rgba(0,230,118,.08)';ctx.lineWidth=mj?1.2:.7;const a=pj(x,0,-mx),b=pj(x,0,mx);if(a&&b){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}for(let z=-mx;z<=mx;z+=st){const mj=z%100===0;ctx.strokeStyle=mj?'rgba(0,230,118,.3)':'rgba(0,230,118,.08)';ctx.lineWidth=mj?1.2:.7;const a=pj(-mx,0,z),b=pj(mx,0,z);if(a&&b){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}}
+const C={1:{c:[0,230,118],h:140,r:9},2:{c:[230,237,243],h:110,r:7},3:{c:[255,171,0],h:90,r:8},0:{c:[125,133,144],h:100,r:5}};
 let devices3D=[];
-function drawDevices(){
-  const sorted=devices3D.slice().sort((a,b)=>b.dist-a.dist);
-  for(const d of sorted){
-    const cfg=COLORS[d.t]||COLORS[0];
-    const x=Math.cos(d.ang)*d.dist, z=Math.sin(d.ang)*d.dist;
-    const p=project(x,cfg.h,z), fl=project(x,0,z);
-    if(!p) continue;
-    const size=Math.max(3,cfg.r*p.s*6);
-    if(fl){
-      ctx.beginPath(); ctx.moveTo(fl.x,fl.y); ctx.lineTo(p.x,p.y);
-      ctx.strokeStyle='rgba('+cfg.c.join(',')+',.22)'; ctx.lineWidth=1; ctx.stroke();
-      ctx.beginPath(); ctx.ellipse(fl.x,fl.y,size*1.4,size*.5,0,0,Math.PI*2);
-      ctx.fillStyle='rgba('+cfg.c.join(',')+',.12)'; ctx.fill();
-    }
-    const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,size*2.6);
-    g.addColorStop(0,'rgba('+cfg.c.join(',')+',.95)');
-    g.addColorStop(.45,'rgba('+cfg.c.join(',')+',.25)');
-    g.addColorStop(1,'rgba('+cfg.c.join(',')+',0)');
-    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,size*2.6,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='rgb('+cfg.c.join(',')+')'; ctx.beginPath(); ctx.arc(p.x,p.y,size,0,Math.PI*2); ctx.fill();
-    if(d.t===1){
-      const pu=(Math.sin(Date.now()/300)+1)*.5;
-      ctx.strokeStyle='rgba('+cfg.c.join(',')+','+(.85-pu*.55)+')'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.arc(p.x,p.y,size*(1.6+pu),0,Math.PI*2); ctx.stroke();
-    }
-  }
-}
-function rssiToDist(r){ if(r>=-40)return 30; if(r<=-95)return 500; return Math.max(30,Math.min(500,Math.pow(10,(-40-r)/25)*100)); }
-function macAngle(m){ let h=5381; for(let i=0;i<m.length;i++) h=((h<<5)+h)+m.charCodeAt(i); return (h%360)*Math.PI/180; }
-function render(){ ctx.fillStyle='rgba(0,6,3,.42)'; ctx.fillRect(0,0,W,H); drawFloor(); drawDevices(); requestAnimationFrame(render); }
+function dv(){const s=devices3D.slice().sort((a,b)=>b.dist-a.dist);for(const d of s){const cf=C[d.t]||C[0];const x=Math.cos(d.ang)*d.dist,z=Math.sin(d.ang)*d.dist;const p=pj(x,cf.h,z),f=pj(x,0,z);if(!p)continue;const sz=Math.max(3,cf.r*p.s*6);if(f){ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(p.x,p.y);ctx.strokeStyle='rgba('+cf.c.join(',')+',.22)';ctx.lineWidth=1;ctx.stroke();}const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,sz*2.6);g.addColorStop(0,'rgba('+cf.c.join(',')+',.95)');g.addColorStop(.45,'rgba('+cf.c.join(',')+',.25)');g.addColorStop(1,'rgba('+cf.c.join(',')+',0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,sz*2.6,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgb('+cf.c.join(',')+')';ctx.beginPath();ctx.arc(p.x,p.y,sz,0,Math.PI*2);ctx.fill();if(d.t===1){const pu=(Math.sin(Date.now()/300)+1)*.5;ctx.strokeStyle='rgba('+cf.c.join(',')+','+(.85-pu*.55)+')';ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,sz*(1.6+pu),0,Math.PI*2);ctx.stroke();}}}
+function rn(){ctx.fillStyle='rgba(0,6,3,.42)';ctx.fillRect(0,0,W,H);floor();dv();requestAnimationFrame(rn);}
+rz();rn();
 
-// ============================================================
-// OTA
-// ============================================================
-function doOTA(){
-  if (!selectedIp){ alert('Выберите плату'); return; }
-  const f = $('otaFile').files[0];
-  const v = $('otaVer').value.trim() || 'new';
-  if (!f){ alert('Выберите .bin'); return; }
-  const fd = new FormData(); fd.append('firmware', f); fd.append('version', v);
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://'+selectedIp+'/update');
-  $('otaProg').classList.remove('hidden');
-  xhr.upload.onprogress = e => { if (e.lengthComputable){ const p = Math.round(e.loaded/e.total*100); $('otaBar').style.width = p+'%'; } };
-  xhr.onload = ()=>{ $('otaMsg').innerText = xhr.responseText; if (xhr.status===200) setTimeout(()=>location.reload(), 4000); };
-  xhr.onerror = ()=>{ $('otaMsg').innerText = 'Ошибка загрузки'; };
-  xhr.send(fd);
-}
-
-// ============================================================
-// INIT
-// ============================================================
-$('subnet').value = localStorage.getItem(LS_SUBNET) || (boards[0] ? boards[0].ip.split('.').slice(0,3).join('.') : '192.168.1');
-
-resize(); render();
-renderBoards();
-refreshAll();
-
-// авто-старт поиска через 1 секунду, если плат нет
-setTimeout(()=>{ if (!boards.length) startDiscovery(); }, 800);
+listBoards();
+setInterval(listBoards, 8000);
 </script>
 </body></html>
