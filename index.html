@@ -1,385 +1,440 @@
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RNViev Center 1.8beta</title>
+<title>RNViev Center</title>
 <style>
-:root{ --b:#000; --w:#fff; --g:#00c853; }
-*{box-sizing:border-box;font-family:'Courier New',monospace;}
-html,body{margin:0;background:#f5f5f5;color:var(--b);}
-body{padding:12px;max-width:1200px;margin:0 auto;}
-h1{font-size:22px;letter-spacing:3px;margin:8px 0;padding:8px 12px;
-   border:3px solid var(--b);box-shadow:4px 4px 0 var(--b);display:inline-block;background:var(--w);}
-h2{font-size:14px;letter-spacing:2px;margin:0 0 8px;}
-.card{border:3px solid var(--b);box-shadow:4px 4px 0 var(--b);padding:12px;
-  margin:12px 0;background:var(--w);}
-input,select{width:100%;padding:8px;border:3px solid var(--b);background:var(--w);
-  color:var(--b);font-family:inherit;font-size:13px;margin:4px 0;font-weight:bold;}
-button{background:var(--w);color:var(--b);border:3px solid var(--b);padding:8px 14px;
-  font-family:inherit;font-weight:bold;cursor:pointer;
-  box-shadow:3px 3px 0 var(--b);letter-spacing:1px;font-size:12px;margin:4px 4px 4px 0;}
-button:active{box-shadow:0 0 0;transform:translate(3px,3px);}
-button.pri{background:var(--b);color:var(--w);}
-button.red{background:#d00;color:#fff;border-color:#900;box-shadow:3px 3px 0 #900;}
-.board-card{border:3px solid var(--b);box-shadow:4px 4px 0 var(--b);
-  padding:12px;margin:12px 0;background:var(--w);}
-.board-head{display:flex;justify-content:space-between;align-items:center;
-  flex-wrap:wrap;gap:8px;}
-.board-head .ip{font-size:16px;font-weight:bold;letter-spacing:2px;}
-.badge{display:inline-block;padding:2px 8px;border:2px solid var(--b);
-  font-size:10px;font-weight:bold;letter-spacing:1px;}
-.badge.ok{background:#00c853;color:#fff;border-color:#008a3a;}
-.badge.err{background:#d00;color:#fff;border-color:#900;}
-.badge.off{background:#ccc;}
-.row{display:flex;justify-content:space-between;padding:4px 6px;
-  border-bottom:2px dotted #ccc;font-size:11px;}
-.row:last-child{border-bottom:none;}
-.hidden{display:none!important;}
-.small{font-size:11px;color:#555;line-height:1.5;}
-.tag{display:inline-block;padding:1px 5px;border:2px solid var(--b);
-  font-size:9px;font-weight:bold;margin-right:4px;}
-.tag.HUMAN{background:#00c853;color:#fff;}
-.tag.ROUTER{background:#000;color:#fff;}
-.tag.AP{background:#ffd600;color:#000;}
-.tag.UNK{background:#fff;color:#000;}
-.ota-prog{border:3px solid var(--b);height:20px;position:relative;margin:6px 0;}
-.ota-prog .bar{background:var(--b);height:100%;width:0%;transition:width .2s;}
-.ota-prog .lbl{position:absolute;inset:0;text-align:center;line-height:20px;
-  font-size:10px;font-weight:bold;color:#fff;mix-blend-mode:difference;}
-#radarWrap{position:relative;border:3px solid var(--b);height:340px;background:#000;
-  box-shadow:4px 4px 0 var(--b);overflow:hidden;}
-#radar{display:block;width:100%;height:100%;cursor:grab;touch-action:none;}
-#radar.drag{cursor:grabbing;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(max-width:700px){.grid2{grid-template-columns:1fr;}}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e14;--panel:#131820;--line:#1e2632;--fg:#e6edf3;--dim:#7d8590;--ac:#00e676;--ac2:#00b0ff;--warn:#ffab00;--err:#ff5252}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;padding:20px;max-width:1400px;margin:0 auto;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+h1{font-size:22px;font-weight:600;letter-spacing:-.02em}
+h1 span{color:var(--ac)}
+.sub{color:var(--dim);font-size:12px;margin-top:2px}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button{padding:9px 16px;background:var(--ac);color:#000;border:0;border-radius:8px;font:600 13px inherit;cursor:pointer;transition:opacity .15s}
+button:hover{opacity:.85}
+button.sec{background:transparent;color:var(--fg);border:1px solid var(--line)}
+button.sec:hover{background:var(--line);opacity:1}
+button.danger{background:transparent;color:var(--err);border:1px solid var(--err)}
+button.danger:hover{background:rgba(255,82,82,.1);opacity:1}
+button:disabled{opacity:.4;cursor:not-allowed}
+input{padding:9px 12px;background:#0a0e14;border:1px solid var(--line);border-radius:8px;color:var(--fg);font:13px inherit;outline:none;transition:border-color .15s}
+input:focus{border-color:var(--ac)}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:16px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.sidebar{display:flex;flex-direction:column;gap:12px}
+.main{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h2{font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.board{padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:border-color .15s;margin-bottom:8px}
+.board:hover{border-color:var(--ac)}
+.board.active{border-color:var(--ac);background:linear-gradient(180deg,var(--panel),rgba(0,230,118,.04))}
+.board-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.board-id{font-weight:600;font-size:14px}
+.board-ip{font:11px ui-monospace,monospace;color:var(--dim)}
+.board-meta{display:flex;gap:14px;font-size:11px;color:var(--dim);margin-top:6px}
+.board-meta b{color:var(--fg);font-weight:500}
+.status{width:7px;height:7px;border-radius:50%;background:var(--ac);box-shadow:0 0 8px var(--ac)}
+.status.off{background:#3a4048;box-shadow:none}
+.status.warn{background:var(--warn);box-shadow:0 0 8px var(--warn)}
+#radarWrap{position:relative;background:#000;border-radius:12px;height:520px;overflow:hidden}
+#radar{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
+#radar:active{cursor:grabbing}
+.empty{text-align:center;padding:60px 20px;color:var(--dim);font-size:13px}
+.empty b{color:var(--fg);display:block;margin-bottom:6px;font-size:15px}
+.tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;display:inline-block;min-width:56px;text-align:center}
+.tag.human{background:rgba(0,230,118,.15);color:var(--ac)}
+.tag.router{background:rgba(255,255,255,.12);color:#fff}
+.tag.ap{background:rgba(255,171,0,.15);color:var(--warn)}
+.tag.unk{background:rgba(125,133,144,.15);color:var(--dim)}
+.row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;align-items:center}
+.row:last-child{border-bottom:0}
+.row .mac{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.row .mac .ssid{color:var(--dim);margin-left:6px}
+.row .rssi{color:var(--dim);font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stats .s{background:#0a0e14;border:1px solid var(--line);border-radius:8px;padding:10px;text-align:center}
+.stats .s b{display:block;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.stats .s span{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.stats .s.human b{color:var(--ac)}
+.stats .s.router b{color:#fff}
+.stats .s.ap b{color:var(--warn)}
+.stats .s.total b{color:var(--ac2)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.discover{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;font-size:12px;color:var(--dim)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ac);animation:p 2s infinite}
+@keyframes p{0%,100%{opacity:.3}50%{opacity:1}}
+.progress{background:#0a0e14;border-radius:4px;height:5px;overflow:hidden;margin:8px 0}
+.progress .bar{height:100%;background:var(--ac);width:0;transition:width .2s}
+.hidden{display:none!important}
+details summary{cursor:pointer;font-size:11px;color:var(--dim);padding:6px 0;text-transform:uppercase;letter-spacing:.06em}
+details summary:hover{color:var(--fg)}
+details .body{margin-top:8px;display:flex;flex-direction:column;gap:6px}
 </style></head><body>
 
-<h1>RNViev Center 1.8beta</h1>
-<div class="small" style="margin-bottom:10px">
-  Локальный центр управления. Открывайте прямо с ПК — файл не требует сервера.
-  Все платы в вашей сети доступны по IP.
-</div>
-
-<div class="card">
-  <h2>&#9632; ДОБАВИТЬ ПЛАТУ</h2>
-  <input type="text" id="newIp" placeholder="IP платы (например, 192.168.4.1 или 192.168.1.57)">
-  <button class="pri" onclick="addBoard()">ДОБАВИТЬ</button>
-  <button onclick="refreshAll()">ОБНОВИТЬ ВСЕ</button>
-  <div class="small">
-    Плата всегда доступна по <b>192.168.4.1</b> (её AP) и по IP в вашей домашней сети
-    (посмотрите в Arduino IDE → Монитор порта).
+<header>
+  <div>
+    <h1>RNViev <span>Center</span></h1>
+    <div class="sub" id="subInfo">Автопоиск плат в сети</div>
   </div>
-</div>
+  <div class="controls">
+    <input type="text" id="subnet" placeholder="192.168.1" style="width:140px">
+    <button class="sec" onclick="startDiscovery()">Найти</button>
+    <button class="sec" onclick="refreshAll()">Обновить</button>
+  </div>
+</header>
 
-<div id="boards"></div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="discover" id="discoverBar">
+      <div class="dot"></div>
+      <div id="discoverText">Готов к поиску</div>
+    </div>
 
-<div class="card">
-  <h2>&#9632; 3D КАРТА — <span id="selIp">— выберите плату —</span></h2>
-  <div id="radarWrap"><canvas id="radar"></canvas></div>
-  <div class="small" style="margin-top:6px">
-    Тяни мышью — вращение. Колёсико — зум.
+    <div class="card">
+      <h2>Платы <span id="boardCount" style="color:var(--dim);font-weight:400"></span></h2>
+      <div id="boards"></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="card" id="detailCard">
+      <div class="toolbar" style="margin-bottom:14px">
+        <div>
+          <div style="font-size:15px;font-weight:600" id="selName">— плата не выбрана —</div>
+          <div class="sub" id="selMeta" style="margin-top:2px"></div>
+        </div>
+        <button class="danger" id="removeBtn" onclick="removeSelected()" style="display:none">Удалить</button>
+      </div>
+
+      <div class="stats" id="statsBar" style="margin-bottom:16px">
+        <div class="s total"><b id="sTotal">0</b><span>Всего</span></div>
+        <div class="s human"><b id="sHuman">0</b><span>Люди</span></div>
+        <div class="s router"><b id="sRouter">0</b><span>Роутеры</span></div>
+        <div class="s ap"><b id="sAp">0</b><span>Точки</span></div>
+      </div>
+
+      <div id="radarWrap"><canvas id="radar"></canvas></div>
+
+      <div style="margin-top:16px">
+        <h2 style="margin-bottom:8px">Устройства</h2>
+        <div id="deviceList" style="max-height:280px;overflow-y:auto">
+          <div class="empty"><b>Нет данных</b>Выберите плату слева</div>
+        </div>
+      </div>
+
+      <details style="margin-top:16px">
+        <summary>Обновление прошивки (OTA)</summary>
+        <div class="body">
+          <input type="text" id="otaVer" placeholder="Версия (напр. 1.9)">
+          <input type="file" id="otaFile" accept=".bin">
+          <div class="progress hidden" id="otaProg"><div class="bar" id="otaBar"></div></div>
+          <button onclick="doOTA()">Отправить обновление</button>
+          <div class="sub" id="otaMsg"></div>
+        </div>
+      </details>
+    </div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// STORAGE
-// ============================================================
-const LS_KEY = 'rnview_boards_v1';
-let boards = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-let selected = null;
+const $ = id => document.getElementById(id);
+const LS_BOARDS = 'rnview_boards_v2';
+const LS_SUBNET = 'rnview_subnet';
 
-function saveBoards(){ localStorage.setItem(LS_KEY, JSON.stringify(boards)); }
+let boards = JSON.parse(localStorage.getItem(LS_BOARDS) || '[]');   // [{ip, id, name, fw, net, online, devs, lastSeen}]
+let selectedIp = null;
 
-function addBoard(){
-  const ip = document.getElementById('newIp').value.trim().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
-  if (!ip){ alert('Введите IP'); return; }
-  if (boards.includes(ip)){ alert('Уже добавлен'); return; }
-  boards.push(ip);
-  saveBoards();
-  document.getElementById('newIp').value = '';
-  renderBoards();
-  refreshAll();
+// ============================================================
+// DISCOVERY
+// ============================================================
+async function probeIp(ip, timeout=800){
+  return new Promise(resolve=>{
+    const t = setTimeout(()=>resolve(null), timeout);
+    fetch('http://'+ip+'/info', {cache:'no-store'})
+      .then(r=>r.ok?r.json():null)
+      .then(d=>{ clearTimeout(t); resolve(d ? {ip, info:d} : null); })
+      .catch(()=>{ clearTimeout(t); resolve(null); });
+  });
 }
 
-function removeBoard(ip){
-  if (!confirm('Удалить ' + ip + '?')) return;
-  boards = boards.filter(b=>b!==ip);
-  saveBoards();
-  renderBoards();
-}
-
-function selectBoard(ip){
-  selected = ip;
-  document.getElementById('selIp').innerText = ip;
-  startRadar(ip);
-}
-
-// ============================================================
-// RENDER
-// ============================================================
-const boardState = {};
-
-function renderBoards(){
-  const el = document.getElementById('boards');
-  if (boards.length === 0){
-    el.innerHTML = '<div class="card small">Платы не добавлены. Введите IP выше.</div>';
-    return;
-  }
-  el.innerHTML = boards.map(ip=>{
-    const s = boardState[ip] || {};
-    const online = !!s.online;
-    const badge = online
-      ? '<span class="badge ok">ONLINE</span>'
-      : '<span class="badge err">OFFLINE</span>';
-    const info = s.info || {};
-    const fw = info.fw || '?';
-    const net = info.net || '?';
-    const devs = s.devs || [];
-    const humans = devs.filter(x=>x.t===1).length;
-    const routers = devs.filter(x=>x.t===2).length;
-    const aps = devs.filter(x=>x.t===3).length;
-
-    let devHtml = '';
-    for (let d of devs.slice().sort((a,b)=>b.r-a.r).slice(0,8)){
-      const t = d.t===1?'HUMAN':d.t===2?'ROUTER':d.t===3?'AP':'UNK';
-      devHtml += '<div class="row"><div><span class="tag '+t+'">'+t+'</span> '
-              +  d.m + (d.s ? ' ['+d.s+']' : '') + '</div>'
-              +  '<div>'+d.r+' dBm</div></div>';
+async function discoverSubnet(base){
+  const total = 254;
+  const batch = 40;
+  const found = [];
+  for (let i = 1; i <= total; i += batch){
+    const promises = [];
+    for (let j = i; j < i + batch && j <= total; j++){
+      promises.push(probeIp(base + '.' + j, 700));
     }
+    const results = await Promise.all(promises);
+    for (const r of results) if (r) found.push(r);
+    $('discoverText').innerText = 'Найдено: ' + (boards.length + found.length) + ' · проверено ' + Math.min(i+batch-1, total) + '/254';
+  }
+  return found;
+}
 
-    return ''
-    + '<div class="board-card">'
-    +   '<div class="board-head">'
-    +     '<div><span class="ip">'+ip+'</span> '+badge+'</div>'
-    +     '<div>'
-    +       '<button onclick="selectBoard(\''+ip+'\')">3D КАРТА</button>'
-    +       '<button onclick="pingBoard(\''+ip+'\')">ОБНОВИТЬ</button>'
-    +       '<button class="red" onclick="removeBoard(\''+ip+'\')">УДАЛИТЬ</button>'
-    +     '</div>'
-    +   '</div>'
-    +   '<div class="small" style="margin:6px 0">'
-    +     'FW: <b>'+fw+'</b> · NET: <b>'+net+'</b> · '
-    +     'УСТРОЙСТВ: <b>'+devs.length+'</b> · '
-    +     'ЛЮДЕЙ: <b>'+humans+'</b> · РОУТЕРОВ: <b>'+routers+'</b> · ТОЧЕК: <b>'+aps+'</b>'
-    +   '</div>'
-    +   '<div style="max-height:180px;overflow:auto;border:2px solid #ccc;padding:4px">'
-    +     (devHtml || '<div class="small">— пусто —</div>')
-    +   '</div>'
-    +   '<details style="margin-top:8px">'
-    +     '<summary class="small" style="cursor:pointer">OTA — загрузить прошивку</summary>'
-    +     '<input type="text" id="otaVer_'+ip.replace(/\./g,'_')+'" placeholder="Версия (напр. 1.9)">'
-    +     '<input type="file" id="otaFile_'+ip.replace(/\./g,'_')+'" accept=".bin">'
-    +     '<div class="ota-prog hidden" id="otaProg_'+ip.replace(/\./g,'_')+'">'
-    +       '<div class="bar" id="otaBar_'+ip.replace(/\./g,'_')+'"></div>'
-    +       '<div class="lbl" id="otaLbl_'+ip.replace(/\./g,'_')+'">0%</div>'
-    +     '</div>'
-    +     '<button class="pri" onclick="doOTA(\''+ip+'\')">ОТПРАВИТЬ</button>'
-    +     '<div class="small" id="otaMsg_'+ip.replace(/\./g,'_')+'"></div>'
-    +   '</details>'
-    + '</div>';
-  }).join('');
+async function startDiscovery(){
+  let base = $('subnet').value.trim();
+  if (!base){
+    // если пусто — попробуем угадать из первого добавленного
+    if (boards.length) base = boards[0].ip.split('.').slice(0,3).join('.');
+    else base = '192.168.1';
+    $('subnet').value = base;
+  }
+  localStorage.setItem(LS_SUBNET, base);
+  $('discoverText').innerText = 'Сканирование ' + base + '.1-254...';
+
+  const found = await discoverSubnet(base);
+  for (const f of found){
+    const existing = boards.find(b=>b.ip === f.ip);
+    if (!existing){
+      boards.push({
+        ip: f.ip, id: f.info.id, name: f.info.name, fw: f.info.fw, net: f.info.net,
+        online: true, devs: [], lastSeen: Date.now()
+      });
+    } else {
+      existing.id = f.info.id; existing.name = f.info.name;
+      existing.fw = f.info.fw; existing.net = f.info.net;
+      existing.online = true; existing.lastSeen = Date.now();
+    }
+  }
+  saveBoards();
+  renderBoards();
+  $('discoverText').innerText = 'Готово · найдено ' + boards.length + ' плат';
+  refreshAll();
 }
 
 // ============================================================
 // POLLING
 // ============================================================
-function pingBoard(ip){
-  fetch('http://'+ip+'/scan', {cache:'no-store'})
-    .then(r=>r.json())
-    .then(d=>{
-      boardState[ip] = { online:true, info:{fw:d.fw, net:d.net, ip:d.ip}, devs:d.devs||[] };
-      renderBoards();
-      if (selected === ip) updateRadarDevices(boardState[ip].devs);
-    })
-    .catch(()=>{
-      boardState[ip] = { online:false };
-      renderBoards();
-    });
+function saveBoards(){
+  localStorage.setItem(LS_BOARDS, JSON.stringify(boards.map(b=>({
+    ip:b.ip, id:b.id, name:b.name, fw:b.fw, net:b.net
+  }))));
 }
 
-function refreshAll(){
-  for (let ip of boards) pingBoard(ip);
+async function pingBoard(b){
+  try {
+    const r = await fetch('http://'+b.ip+'/scan', {cache:'no-store'});
+    if (!r.ok) throw 0;
+    const d = await r.json();
+    b.online = true; b.lastSeen = Date.now();
+    b.fw = d.fw; b.net = d.net;
+    b.devs = d.devs || [];
+    return true;
+  } catch {
+    b.online = false;
+    return false;
+  }
+}
+
+async function refreshAll(){
+  if (!boards.length) return;
+  await Promise.all(boards.map(pingBoard));
+  renderBoards();
+  if (selectedIp){
+    const b = boards.find(x=>x.ip===selectedIp);
+    if (b) renderDetail(b);
+  }
 }
 
 setInterval(refreshAll, 3000);
-renderBoards();
+setInterval(()=>{
+  // каждые 30 сек — автообновление списка через подсеть
+  const base = localStorage.getItem(LS_SUBNET);
+  if (base && !$('discoverBar').dataset.busy){
+    refreshAll();
+  }
+}, 15000);
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderBoards(){
+  $('boardCount').innerText = boards.length ? '(' + boards.length + ')' : '';
+  const el = $('boards');
+  if (!boards.length){
+    el.innerHTML = '<div class="empty" style="padding:30px 10px"><b>Плат нет</b>Нажмите «Найти» для поиска</div>';
+    return;
+  }
+  el.innerHTML = boards.map(b=>{
+    const cls = b.online ? '' : 'off';
+    const act = selectedIp === b.ip ? 'active' : '';
+    return '<div class="board '+act+'" onclick="selectBoard(\''+b.ip+'\')">'
+      +  '<div class="board-head">'
+      +    '<div class="board-id"><span class="status '+cls+'"></span> RNViev '+(b.id||'')+'</div>'
+      +    '<div class="board-ip">'+b.ip+'</div>'
+      +  '</div>'
+      +  '<div class="board-meta">'
+      +    '<span>FW <b>'+(b.fw||'?')+'</b></span>'
+      +    '<span>Устр. <b>'+(b.devs?b.devs.length:0)+'</b></span>'
+      +    '<span>Люди <b>'+(b.devs?b.devs.filter(x=>x.t===1).length:0)+'</b></span>'
+      +  '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function selectBoard(ip){
+  selectedIp = ip;
+  const b = boards.find(x=>x.ip===ip);
+  renderBoards();
+  if (b) renderDetail(b);
+}
+
+function renderDetail(b){
+  $('selName').innerText = 'RNViev ' + (b.id || b.ip);
+  $('selMeta').innerText = b.ip + ' · ' + (b.net||'?') + ' · FW ' + (b.fw||'?') + (b.online?'':' · ОФФЛАЙН');
+  $('removeBtn').style.display = 'inline-block';
+
+  const devs = b.devs || [];
+  $('sTotal').innerText  = devs.length;
+  $('sHuman').innerText  = devs.filter(x=>x.t===1).length;
+  $('sRouter').innerText = devs.filter(x=>x.t===2).length;
+  $('sAp').innerText     = devs.filter(x=>x.t===3).length;
+
+  devices3D = devs.map(x=>({t:x.t, r:x.r, dist:rssiToDist(x.r), ang:macAngle(x.m)}));
+
+  let h = '';
+  for (const x of devs.slice().sort((a,c)=>c.r-a.r)){
+    const tag = x.t===1?'human':x.t===2?'router':x.t===3?'ap':'unk';
+    const name = x.t===1?'Человек':x.t===2?'Роутер':x.t===3?'Точка':'?';
+    const ssid = x.s ? '<span class="ssid">['+x.s+']</span>' : '';
+    h += '<div class="row"><span class="tag '+tag+'">'+name+'</span>'
+      +  '<div class="mac">'+x.m+ssid+'</div>'
+      +  '<div class="rssi">'+x.r+' dBm</div></div>';
+  }
+  $('deviceList').innerHTML = h || '<div class="empty" style="padding:20px">Устройств не найдено</div>';
+}
+
+function removeSelected(){
+  if (!selectedIp) return;
+  if (!confirm('Удалить плату ' + selectedIp + '?')) return;
+  boards = boards.filter(b=>b.ip !== selectedIp);
+  saveBoards();
+  selectedIp = null;
+  $('selName').innerText = '— плата не выбрана —';
+  $('selMeta').innerText = '';
+  $('removeBtn').style.display = 'none';
+  devices3D = [];
+  $('deviceList').innerHTML = '<div class="empty"><b>Нет данных</b>Выберите плату слева</div>';
+  renderBoards();
+}
 
 // ============================================================
 // 3D RADAR
 // ============================================================
-const canvas = document.getElementById('radar');
-const ctx = canvas.getContext('2d');
+const canvas = $('radar'), ctx = canvas.getContext('2d');
 let W, H;
 function resize(){
   const r = canvas.parentNode.getBoundingClientRect();
-  W = canvas.width  = Math.floor(r.width);
-  H = canvas.height = Math.floor(r.height);
+  W = canvas.width = r.width|0;
+  H = canvas.height = r.height|0;
 }
 addEventListener('resize', resize);
 
-const cam = { yaw:0.6, pitch:0.55, dist:600, targetY:50, fov:500 };
-let dragging=false, lastX=0, lastY=0, pinch=0;
-
-canvas.addEventListener('mousedown', e=>{ dragging=true; canvas.classList.add('drag'); lastX=e.clientX; lastY=e.clientY; });
-canvas.addEventListener('mousemove', e=>{
-  if(!dragging) return;
-  cam.yaw   += (e.clientX-lastX)*0.008;
-  cam.pitch += (e.clientY-lastY)*0.006;
-  cam.pitch = Math.max(0.05, Math.min(1.35, cam.pitch));
-  lastX=e.clientX; lastY=e.clientY;
-});
-addEventListener('mouseup', ()=>{ dragging=false; canvas.classList.remove('drag'); });
-canvas.addEventListener('wheel', e=>{
-  cam.dist *= (1 + e.deltaY*0.001);
-  cam.dist = Math.max(180, Math.min(1800, cam.dist));
-  e.preventDefault();
-}, {passive:false});
+const cam = {yaw:.6, pitch:.55, dist:700, targetY:50, fov:550};
+let drag=false, lx=0, ly=0, pinch=0;
+canvas.addEventListener('mousedown', e=>{drag=true; lx=e.clientX; ly=e.clientY;});
+canvas.addEventListener('mousemove', e=>{ if(!drag)return; cam.yaw+=(e.clientX-lx)*.008; cam.pitch=Math.max(.05,Math.min(1.35,cam.pitch+(e.clientY-ly)*.006)); lx=e.clientX; ly=e.clientY; });
+addEventListener('mouseup', ()=>drag=false);
+canvas.addEventListener('wheel', e=>{ cam.dist=Math.max(180,Math.min(2000,cam.dist*(1+e.deltaY*.001))); e.preventDefault(); }, {passive:false});
+canvas.addEventListener('touchstart', e=>{ if(e.touches.length===1){drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY;} else if(e.touches.length===2){drag=false;pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}}, {passive:true});
+canvas.addEventListener('touchmove', e=>{ if(e.touches.length===1&&drag){cam.yaw+=(e.touches[0].clientX-lx)*.008;cam.pitch=Math.max(.05,Math.min(1.35,cam.pitch+(e.touches[0].clientY-ly)*.006));lx=e.touches[0].clientX;ly=e.touches[0].clientY;} else if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);cam.dist=Math.max(180,Math.min(2000,cam.dist*pinch/d));pinch=d;} e.preventDefault(); }, {passive:false});
+canvas.addEventListener('touchend', ()=>drag=false);
 
 function project(x,y,z){
   let dx=x, dy=y-cam.targetY, dz=z;
   const cy=Math.cos(-cam.yaw), sy=Math.sin(-cam.yaw);
-  let rx = dx*cy - dz*sy, rz = dx*sy + dz*cy;
+  let rx=dx*cy-dz*sy, rz=dx*sy+dz*cy;
   const cp=Math.cos(-cam.pitch), sp=Math.sin(-cam.pitch);
-  let ry = dy*cp - rz*sp;
-  let rz2 = dy*sp + rz*cp + cam.dist;
+  let ry=dy*cp-rz*sp, rz2=dy*sp+rz*cp+cam.dist;
   if(rz2<=1) return null;
-  const f = cam.fov/rz2;
-  return {x:W/2+rx*f, y:H/2-ry*f, s:f, d:rz2};
+  const f=cam.fov/rz2;
+  return {x:W/2+rx*f, y:H/2-ry*f, s:f};
 }
-
 function drawFloor(){
   const step=50, max=300;
   for(let x=-max;x<=max;x+=step){
-    const mj = x%100===0;
-    ctx.strokeStyle = mj?'rgba(0,255,0,0.35)':'rgba(0,255,0,0.13)';
-    ctx.lineWidth = mj?1.2:0.7;
+    const mj=x%100===0;
+    ctx.strokeStyle=mj?'rgba(0,230,118,.3)':'rgba(0,230,118,.08)';
+    ctx.lineWidth=mj?1.2:.7;
     const a=project(x,0,-max), b=project(x,0,max);
-    if(a&&b){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+    if(a&&b){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
   }
   for(let z=-max;z<=max;z+=step){
-    const mj = z%100===0;
-    ctx.strokeStyle = mj?'rgba(0,255,0,0.35)':'rgba(0,255,0,0.13)';
-    ctx.lineWidth = mj?1.2:0.7;
+    const mj=z%100===0;
+    ctx.strokeStyle=mj?'rgba(0,230,118,.3)':'rgba(0,230,118,.08)';
+    ctx.lineWidth=mj?1.2:.7;
     const a=project(-max,0,z), b=project(max,0,z);
-    if(a&&b){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+    if(a&&b){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
   }
-  const o = project(0,0,0);
-  if(o){ ctx.strokeStyle='rgba(0,255,0,0.7)'; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.arc(o.x,o.y,5,0,Math.PI*2); ctx.stroke(); }
-  ctx.fillStyle='rgba(0,255,0,0.5)'; ctx.font='10px Consolas';
-  for(let d=100; d<=500; d+=100){
-    const p=project(d,0,0);
-    if(p) ctx.fillText(d+'cm', p.x+3, p.y-3);
-  }
+  const o=project(0,0,0);
+  if(o){ctx.strokeStyle='rgba(0,230,118,.6)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(o.x,o.y,5,0,Math.PI*2);ctx.stroke();}
+  ctx.fillStyle='rgba(0,230,118,.4)'; ctx.font='10px ui-monospace,monospace';
+  for(let d=100;d<=500;d+=100){const p=project(d,0,0); if(p) ctx.fillText(d+'cm',p.x+3,p.y-3);}
 }
-
-const COLORS = {
-  1:{c:[0,255,102],h:140,r:9},
-  2:{c:[255,255,255],h:110,r:7},
-  3:{c:[255,214,0],h:90,r:8},
-  0:{c:[150,150,150],h:100,r:5}
-};
-
-let devices3D = [];
-
-function updateRadarDevices(devs){
-  devices3D = devs.map(x=>({
-    t:x.t, r:x.r,
-    dist: rssiToDist(x.r),
-    ang: macAngle(x.m)
-  }));
-}
-
-function rssiToDist(r){
-  if(r>=-40) return 30;
-  if(r<=-95) return 500;
-  const d = Math.pow(10,(-40-r)/25);
-  return Math.max(30, Math.min(500, d*100));
-}
-function macAngle(m){
-  let h=5381;
-  for(let i=0;i<m.length;i++) h=((h<<5)+h)+m.charCodeAt(i);
-  return (h%360)*Math.PI/180;
-}
-
+const COLORS={1:{c:[0,230,118],h:140,r:9},2:{c:[230,237,243],h:110,r:7},3:{c:[255,171,0],h:90,r:8},0:{c:[125,133,144],h:100,r:5}};
+let devices3D=[];
 function drawDevices(){
-  const sorted = devices3D.slice().sort((a,b)=>b.dist-a.dist);
+  const sorted=devices3D.slice().sort((a,b)=>b.dist-a.dist);
   for(const d of sorted){
-    const cfg = COLORS[d.t] || COLORS[0];
-    const x = Math.cos(d.ang)*d.dist;
-    const z = Math.sin(d.ang)*d.dist;
-    const p = project(x, cfg.h, z);
-    const fl = project(x, 0, z);
+    const cfg=COLORS[d.t]||COLORS[0];
+    const x=Math.cos(d.ang)*d.dist, z=Math.sin(d.ang)*d.dist;
+    const p=project(x,cfg.h,z), fl=project(x,0,z);
     if(!p) continue;
-    const size = Math.max(3, cfg.r*p.s*6);
+    const size=Math.max(3,cfg.r*p.s*6);
     if(fl){
       ctx.beginPath(); ctx.moveTo(fl.x,fl.y); ctx.lineTo(p.x,p.y);
-      ctx.strokeStyle = 'rgba('+cfg.c.join(',')+',0.25)'; ctx.lineWidth=1.2; ctx.stroke();
-      ctx.beginPath(); ctx.ellipse(fl.x, fl.y, size*1.4, size*0.5, 0, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba('+cfg.c.join(',')+',0.14)'; ctx.fill();
+      ctx.strokeStyle='rgba('+cfg.c.join(',')+',.22)'; ctx.lineWidth=1; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(fl.x,fl.y,size*1.4,size*.5,0,0,Math.PI*2);
+      ctx.fillStyle='rgba('+cfg.c.join(',')+',.12)'; ctx.fill();
     }
-    const grd = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,size*2.6);
-    grd.addColorStop(0, 'rgba('+cfg.c.join(',')+',0.95)');
-    grd.addColorStop(0.45, 'rgba('+cfg.c.join(',')+',0.28)');
-    grd.addColorStop(1, 'rgba('+cfg.c.join(',')+',0)');
-    ctx.fillStyle = grd;
-    ctx.beginPath(); ctx.arc(p.x,p.y,size*2.6,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle = 'rgb('+cfg.c.join(',')+')';
-    ctx.beginPath(); ctx.arc(p.x,p.y,size,0,Math.PI*2); ctx.fill();
+    const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,size*2.6);
+    g.addColorStop(0,'rgba('+cfg.c.join(',')+',.95)');
+    g.addColorStop(.45,'rgba('+cfg.c.join(',')+',.25)');
+    g.addColorStop(1,'rgba('+cfg.c.join(',')+',0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,size*2.6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgb('+cfg.c.join(',')+')'; ctx.beginPath(); ctx.arc(p.x,p.y,size,0,Math.PI*2); ctx.fill();
     if(d.t===1){
-      const pulse = (Math.sin(Date.now()/280)+1)*0.5;
-      ctx.strokeStyle='rgba('+cfg.c.join(',')+','+(0.85-pulse*0.55)+')';
-      ctx.lineWidth=2;
-      ctx.beginPath(); ctx.arc(p.x,p.y,size*(1.6+pulse),0,Math.PI*2); ctx.stroke();
+      const pu=(Math.sin(Date.now()/300)+1)*.5;
+      ctx.strokeStyle='rgba('+cfg.c.join(',')+','+(.85-pu*.55)+')'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(p.x,p.y,size*(1.6+pu),0,Math.PI*2); ctx.stroke();
     }
   }
 }
-
-function render(){
-  ctx.fillStyle='rgba(0,6,0,0.42)';
-  ctx.fillRect(0,0,W,H);
-  drawFloor();
-  drawDevices();
-  requestAnimationFrame(render);
-}
-
-function startRadar(ip){
-  if (boardState[ip] && boardState[ip].devs){
-    updateRadarDevices(boardState[ip].devs);
-  }
-}
-
-resize(); render();
+function rssiToDist(r){ if(r>=-40)return 30; if(r<=-95)return 500; return Math.max(30,Math.min(500,Math.pow(10,(-40-r)/25)*100)); }
+function macAngle(m){ let h=5381; for(let i=0;i<m.length;i++) h=((h<<5)+h)+m.charCodeAt(i); return (h%360)*Math.PI/180; }
+function render(){ ctx.fillStyle='rgba(0,6,3,.42)'; ctx.fillRect(0,0,W,H); drawFloor(); drawDevices(); requestAnimationFrame(render); }
 
 // ============================================================
 // OTA
 // ============================================================
-function doOTA(ip){
-  const key = ip.replace(/\./g,'_');
-  const f = document.getElementById('otaFile_'+key).files[0];
-  const v = document.getElementById('otaVer_'+key).value.trim() || 'unknown';
+function doOTA(){
+  if (!selectedIp){ alert('Выберите плату'); return; }
+  const f = $('otaFile').files[0];
+  const v = $('otaVer').value.trim() || 'new';
   if (!f){ alert('Выберите .bin'); return; }
-  const fd = new FormData();
-  fd.append('firmware', f);
-  fd.append('version', v);
+  const fd = new FormData(); fd.append('firmware', f); fd.append('version', v);
   const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://'+ip+'/update');
-  document.getElementById('otaProg_'+key).classList.remove('hidden');
-  xhr.upload.onprogress = e=>{
-    if (e.lengthComputable){
-      const p = Math.round(e.loaded/e.total*100);
-      document.getElementById('otaBar_'+key).style.width = p+'%';
-      document.getElementById('otaLbl_'+key).innerText = p+'%';
-    }
-  };
-  xhr.onload = ()=>{
-    document.getElementById('otaMsg_'+key).innerText = xhr.responseText;
-    if (xhr.status === 200) setTimeout(refreshAll, 4000);
-  };
-  xhr.onerror = ()=>{
-    document.getElementById('otaMsg_'+key).innerText = 'Ошибка загрузки';
-  };
+  xhr.open('POST', 'http://'+selectedIp+'/update');
+  $('otaProg').classList.remove('hidden');
+  xhr.upload.onprogress = e => { if (e.lengthComputable){ const p = Math.round(e.loaded/e.total*100); $('otaBar').style.width = p+'%'; } };
+  xhr.onload = ()=>{ $('otaMsg').innerText = xhr.responseText; if (xhr.status===200) setTimeout(()=>location.reload(), 4000); };
+  xhr.onerror = ()=>{ $('otaMsg').innerText = 'Ошибка загрузки'; };
   xhr.send(fd);
 }
+
+// ============================================================
+// INIT
+// ============================================================
+$('subnet').value = localStorage.getItem(LS_SUBNET) || (boards[0] ? boards[0].ip.split('.').slice(0,3).join('.') : '192.168.1');
+
+resize(); render();
+renderBoards();
+refreshAll();
+
+// авто-старт поиска через 1 секунду, если плат нет
+setTimeout(()=>{ if (!boards.length) startDiscovery(); }, 800);
 </script>
 </body></html>
